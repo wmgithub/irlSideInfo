@@ -14,7 +14,7 @@ grid_dim = 10;
 % Number of available actions
 action_no = 4;
 
-% Stochastic transition
+% Stochastic transition 
 % p_center: Prob to transit in the given direction
 % p_others: Prob to transit to other directions
 p_center = 1;

@@ -1,5 +1,5 @@
 cd '/home/min/PennAcademics/irl_inferred_logic/active_irl_experiment'
-addpath '/home/min/Softwares/minFunc_2012/minFunc'
+addpath(genpath('/home/min/Softwares/minFunc_2012'));
 disp('Configuring')
 config
 
@@ -20,5 +20,5 @@ generate_demos_4
 disp('Done!')
 
 disp('Doing inverse reinforcement learning...')
-
-% disp('Done!')
+maxEntIRL
+disp('Done!')

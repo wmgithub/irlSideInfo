@@ -43,6 +43,9 @@ for action_id = 1 : mdp_struct.action_no
 %         dfa_id = floor((state_id - 1)/mdp_struct.state_no) + 1;
         
         % The successor state in MDP
+        % Note that transition is for deterministic MDP transitions.
+        % Stochastic transitions will be taken into account in value
+        % iteration. 
         mdp_id_next = mdp_struct.transition(mdp_id, action_id);
         % label of the successor state in AP
         label_id_next = mdp_struct.labeling(mdp_id_next);
@@ -77,7 +80,7 @@ end
 
 % Test the transition function
 if testing
-    colormap = hsv(dfa_struct.state_no);
+    color_index = hsv(dfa_struct.state_no);
     % fig_id = 0;
     for fig_id = 0 : dfa_struct.state_no-1
         figure(1);
@@ -91,20 +94,20 @@ if testing
             % Up
             state_id_next = transition(state_id, 1);
             dfa_id_next = floor((state_id_next - 1)/mdp_struct.state_no) + 1;
-            patch([0, 1, 0.5, 0]+x, [1, 1, 0.5, 1]+y, colormap(dfa_id_next,:))
+            patch([0, 1, 0.5, 0]+x, [1, 1, 0.5, 1]+y, color_index(dfa_id_next,:))
             hold on
             % Right
             state_id_next = transition(state_id, 2);
             dfa_id_next = floor((state_id_next - 1)/mdp_struct.state_no) + 1;
-            patch([1, 1, 0.5, 1]+x, [1, 0, 0.5, 1]+y, colormap(dfa_id_next,:))
+            patch([1, 1, 0.5, 1]+x, [1, 0, 0.5, 1]+y, color_index(dfa_id_next,:))
             % Down
             state_id_next = transition(state_id, 3);
             dfa_id_next = floor((state_id_next - 1)/mdp_struct.state_no) + 1;
-            patch([0, 1, 0.5, 0]+x, [0, 0, 0.5, 0]+y, colormap(dfa_id_next,:))
+            patch([0, 1, 0.5, 0]+x, [0, 0, 0.5, 0]+y, color_index(dfa_id_next,:))
             % Left
             state_id_next = transition(state_id, 4);
             dfa_id_next = floor((state_id_next - 1)/mdp_struct.state_no) + 1;
-            patch([0, 0, 0.5, 0]+x, [1, 0, 0.5, 1]+y, colormap(dfa_id_next,:))
+            patch([0, 0, 0.5, 0]+x, [1, 0, 0.5, 1]+y, color_index(dfa_id_next,:))
         end
         title(['DFA state ', num2str(fig_id+1)])
         saveas(gcf, ['dfa_state_', num2str(fig_id+1)], 'png')

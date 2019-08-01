@@ -46,10 +46,13 @@ R = create_DRA(['./' formula '.out'], N_p, 1);
 % We assume that the DFA encodes a reachability specification. Therefore, 
 % target states should be K, unsafe states should be in L. 
 
-% Each column represents "green2, green1, yellow, red, nothing"
+% Each column represents "green2, green1, yellow, red, nothing", where
+% white color is 'nothing'
 dfa_trans = R.trans(:, [8, 4, 2, 1, size(R.trans, 2)]);
 % AP_struct = struct( 'blue', 1, 'yellow', 2, 'red', 3, ...
 %                     'green1', 4, 'green2', 5, 'white', 6);
+
+% According to Zhe, dfa_APs is exactly in the reverse order of R.APs. 
 dfa_APs = {'yellow', 'green2', 'green1', 'red'};
 
 dfa_struct = R;

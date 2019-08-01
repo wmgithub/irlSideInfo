@@ -1,4 +1,4 @@
-function [obj_val, d_obj] = irlObjFunc(theta, demo_trajs, F, state_no, mdp_struct)
+function [obj_val, d_obj] = irlObjFunc(theta, demo_trajs, F, dF, state_no, mdp_struct, transition, stochastic)
 
 % R: the reward matrix, state_no-by-mdp_struct.action_no
 % R: 600 x 4
@@ -28,7 +28,7 @@ dpi = z_theta - ...
     repmat(sum(z_theta, 2), 1, mdp_struct.action_no, 1);
 
 
-disp('Initializing')
+% disp('Initializing')
 err = 1;
 cnt = 0;
 while err > 1e-5
@@ -40,7 +40,7 @@ while err > 1e-5
     V_prev = V;
     cnt = cnt + 1;
     
-    disp(['[',num2str(cnt),'] err = ', num2str(err)])
+%     disp(['[',num2str(cnt),'] err = ', num2str(err)])
 end
 
 % Compute the gradient of Q w.r.t. theta
@@ -56,7 +56,7 @@ err = max(abs(dQ(:) - dQ_prev(:)));
 dQ_prev = dQ;
 cnt = cnt + 1;
 
-disp(['[',num2str(cnt),'] err = ', num2str(err)])
+% disp(['[',num2str(cnt),'] err = ', num2str(err)])
 end
 
 z_theta = repmat(policy, 1, 1, size(F,2)) .* dQ;
@@ -75,8 +75,14 @@ dQ_index = sub2ind(size(dQ),    repmat(demo_trajs(:,1), size(F,2), 1), ...
 tmp1 = sum(reshape(dQ(dQ_index), size(demo_trajs, 1), size(F, 2)), 1);                            
 tmp2 = sum(squeeze(sum(z_theta(demo_trajs(:,1), :, :), 2)), 1);
 
+% Original objective is to maximize likelihood 
 obj_val = sum(log(policy(Q_index))) / size(demo_trajs, 1);
 d_obj = tmp1 - tmp2;
+d_obj = d_obj' / size(demo_trajs, 1);
+
+% Since we will minimize the negative likelihood objective (which is positive), we get negative of obj_val
+obj_val = -obj_val;
+d_obj = -d_obj;
                             
 % obj_val = sum(Q(Q_index)) / size(demo_trajs, 1);
 % d_obj = sum(reshape(dQ(dQ_index), size(demo_trajs, 1), size(F,2)), 1) / size(demo_trajs, 1);
